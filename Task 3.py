@@ -24,7 +24,7 @@ dataset = data.groupby('Month').agg({
                     'Retention':'mean',
                     'Date':'count',
                     'index':'min'}).sort_values(by=['index'], ascending=True)
-dataset['Retention2'] = round(dataset['Subscribers'] / dataset['Trial'], 4)
+dataset['RetentionWeighted'] = round(dataset['Subscribers'] / dataset['Trial'], 4)
 
 dataset = dataset.drop(columns=['index']).reset_index()
 dataset['Retention'] = round(dataset['Retention'], 4)
@@ -36,7 +36,7 @@ dataset['Charges'] = np.where(dataset['Month number'] <= 12, 0.30, 0.15)
 dataset['Net Price'] = round(dataset['Subs Price'] * (1 - dataset['Charges']), 2)
 
 # 6. Расчет LTV для каждого месяца и LTV12, LTV24
-dataset['LTV'] = round(dataset['Retention'] * dataset['Net Price'], 2)
+dataset['LTV'] = round(dataset['RetentionWeighted'] * dataset['Net Price'], 2)
 
 dataset.to_csv('E:\Саша\AIBY\Task 3 result data.csv')
 # print(dataset)
